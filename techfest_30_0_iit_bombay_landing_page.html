@@ -1,0 +1,1414 @@
+<!DOCTYPE html>
+<html lang="en" class="dark scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TECHFEST 30.0 | IIT Bombay — Asia's Largest Science & Technology Festival</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Space Grotesk, Inter, JetBrains Mono -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        obsidian: '#050507',
+                        panel: '#0B0B0F',
+                        panelHover: '#111118',
+                        cyanPulse: '#00F0FF',
+                        signalOrange: '#FF3B00',
+                        acidLime: '#CCFF00',
+                        crispWhite: '#F4F4F6',
+                        mutedSteel: '#8A8F98',
+                        gridBorder: '#1E2028'
+                    },
+                    fontFamily: {
+                        display: ['"Space Grotesk"', 'sans-serif'],
+                        sans: ['"Inter"', 'sans-serif'],
+                        mono: ['"JetBrains Mono"', 'monospace'],
+                    },
+                    animation: {
+                        'marquee': 'marquee 28s linear infinite',
+                        'marquee-fast': 'marquee 18s linear infinite',
+                        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                    },
+                    keyframes: {
+                        marquee: {
+                            '0%': { transform: 'translateX(0%)' },
+                            '100%': { transform: 'translateX(-50%)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Custom Scrollbar & Swiss Grid Aesthetics */
+        body {
+            background-color: #050507;
+            color: #F4F4F6;
+            overflow-x: hidden;
+            font-family: 'Inter', sans-serif;
+        }
+
+        /* Subtle Swiss Blueprint Grid Pattern */
+        .swiss-grid-bg {
+            background-size: 48px 48px;
+            background-image: 
+                linear-gradient(to right, rgba(30, 32, 40, 0.45) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(30, 32, 40, 0.45) 1px, transparent 1px);
+        }
+
+        /* Kinetic Text Stroke Effect */
+        .text-stroke-white {
+            -webkit-text-stroke: 1.5px rgba(244, 244, 246, 0.85);
+            color: transparent;
+            transition: all 0.3s ease;
+        }
+        .text-stroke-white:hover {
+            color: #F4F4F6;
+            -webkit-text-stroke: 1.5px #F4F4F6;
+        }
+
+        .text-stroke-cyan {
+            -webkit-text-stroke: 1.5px #00F0FF;
+            color: transparent;
+        }
+
+        /* Custom Magnetic Cursor (Desktop only) */
+        @media (pointer: fine) {
+            #custom-cursor {
+                pointer-events: none;
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 22px;
+                height: 22px;
+                border: 1.5px solid #00F0FF;
+                border-radius: 50%;
+                transform: translate(-50%, -50%);
+                z-index: 9999;
+                transition: width 0.2s ease, height 0.2s ease, background-color 0.2s ease, border-color 0.2s ease;
+                mix-blend-mode: difference;
+            }
+            #custom-cursor.cursor-active {
+                width: 54px;
+                height: 54px;
+                background-color: rgba(0, 240, 255, 0.15);
+                border-color: #FF3B00;
+            }
+        }
+
+        /* Scanline Subtle Overlay */
+        .scanlines {
+            background: linear-gradient(
+                to bottom,
+                rgba(255,255,255,0),
+                rgba(255,255,255,0) 50%,
+                rgba(0,0,0,0.25) 50%,
+                rgba(0,0,0,0.25)
+            );
+            background-size: 100% 4px;
+        }
+
+        /* Custom Range Slider for CA Tier Calculator */
+        input[type=range] {
+            -webkit-appearance: none;
+            background: transparent;
+        }
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            height: 20px;
+            width: 20px;
+            border-radius: 4px;
+            background: #00F0FF;
+            cursor: pointer;
+            margin-top: -7px;
+            border: 2px solid #050507;
+            box-shadow: 0 0 12px rgba(0, 240, 255, 0.7);
+        }
+        input[type=range]::-webkit-slider-runnable-track {
+            width: 100%;
+            height: 6px;
+            cursor: pointer;
+            background: #1E2028;
+            border-radius: 3px;
+        }
+    </style>
+</head>
+<body class="antialiased selection:bg-cyanPulse selection:text-obsidian">
+
+    <!-- Custom Magnetic Reticle Cursor -->
+    <div id="custom-cursor" class="hidden md:block"></div>
+
+    <!-- =====================================================================
+         1. TOP HUD NAVIGATION BAR
+    ====================================================================== -->
+    <header class="sticky top-0 z-50 bg-obsidian/90 backdrop-blur-md border-b border-gridBorder">
+        <!-- Live Telemetry Micro-Strip -->
+        <div class="border-b border-gridBorder/70 bg-panel px-4 sm:px-8 py-1.5 flex flex-wrap items-center justify-between text-[11px] font-mono tracking-wider text-mutedSteel">
+            <div class="flex items-center gap-2.5">
+                <span class="relative flex h-2 w-2">
+                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyanPulse opacity-75"></span>
+                    <span class="relative inline-flex rounded-full h-2 w-2 bg-cyanPulse"></span>
+                </span>
+                <span class="text-crispWhite font-medium">SYS.STATUS: ONLINE</span>
+                <span class="hidden sm:inline text-gridBorder">|</span>
+                <span class="hidden sm:inline text-cyanPulse">30TH EDITION // IIT BOMBAY // DEC 2026</span>
+            </div>
+            <div class="flex items-center gap-4">
+                <span id="telemetry-coords" class="hidden md:inline text-mutedSteel">LAT 19.1334° N // LON 72.9133° E</span>
+                <span class="text-signalOrange font-semibold">REGISTRATIONS PHASE II OPEN</span>
+            </div>
+        </div>
+
+        <!-- Main Navigation Container -->
+        <nav class="max-w-[1440px] mx-auto px-4 sm:px-8 h-16 flex items-center justify-between">
+            <!-- Brand Monogram -->
+            <a href="#" class="flex items-center gap-3 group interactive-target">
+                <div class="w-9 h-9 bg-crispWhite text-obsidian font-display font-bold text-lg flex items-center justify-center rounded-sm group-hover:bg-cyanPulse transition-colors">
+                    TF
+                </div>
+                <div class="flex flex-col">
+                    <span class="font-display font-bold text-lg tracking-tight leading-none text-crispWhite">TECHFEST <span class="text-cyanPulse">30.0</span></span>
+                    <span class="font-mono text-[10px] tracking-widest text-mutedSteel uppercase mt-0.5">IIT BOMBAY</span>
+                </div>
+            </a>
+
+            <!-- Desktop Links -->
+            <div class="hidden lg:flex items-center gap-8 font-mono text-xs uppercase tracking-widest">
+                <a href="#pillars" onclick="filterPillars('competitions')" class="text-mutedSteel hover:text-cyanPulse transition-colors interactive-target">01. Competitions</a>
+                <a href="#pillars" onclick="filterPillars('workshops')" class="text-mutedSteel hover:text-cyanPulse transition-colors interactive-target">02. Workshops</a>
+                <a href="#pillars" onclick="filterPillars('ignite')" class="text-mutedSteel hover:text-cyanPulse transition-colors interactive-target">03. Ignite</a>
+                <a href="#pillars" onclick="filterPillars('ca')" class="text-mutedSteel hover:text-cyanPulse transition-colors interactive-target">04. CA Program</a>
+                <a href="#schedule-explorer" class="text-mutedSteel hover:text-cyanPulse transition-colors interactive-target">05. Tracks</a>
+                <a href="#accommodation" class="text-mutedSteel hover:text-cyanPulse transition-colors interactive-target">06. Logistics</a>
+            </div>
+
+            <!-- Action Triggers -->
+            <div class="flex items-center gap-3">
+                <div id="user-badge-display" class="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded bg-panel border border-cyanPulse/40 font-mono text-xs text-cyanPulse">
+                    <span>ID:</span>
+                    <span id="active-tf-id" class="font-bold">GUEST</span>
+                </div>
+                <button onclick="openRegistrationModal('General Pass / Competitor')" class="interactive-target px-4 sm:px-5 py-2.5 bg-signalOrange hover:bg-crispWhite text-obsidian font-mono font-bold text-xs uppercase tracking-wider rounded-sm transition-all duration-200 flex items-center gap-2 shadow-[0_0_20px_rgba(255,59,0,0.3)]">
+                    <span>REGISTER / ID</span>
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="square" stroke-linejoin="miter" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                </button>
+                <!-- Mobile Menu Toggle -->
+                <button id="mobile-menu-btn" onclick="toggleMobileMenu()" class="lg:hidden p-2.5 border border-gridBorder bg-panel text-crispWhite rounded-sm" aria-label="Toggle Menu">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="square" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+                </button>
+            </div>
+        </nav>
+
+        <!-- Mobile Drawer -->
+        <div id="mobile-menu" class="hidden lg:hidden bg-panel border-b border-gridBorder px-6 py-5 space-y-3 font-mono text-xs uppercase tracking-widest">
+            <a href="#pillars" onclick="filterPillars('competitions'); toggleMobileMenu()" class="block py-2 text-crispWhite hover:text-cyanPulse border-b border-gridBorder/50">01 // Competitions</a>
+            <a href="#pillars" onclick="filterPillars('workshops'); toggleMobileMenu()" class="block py-2 text-crispWhite hover:text-cyanPulse border-b border-gridBorder/50">02 // Workshops</a>
+            <a href="#pillars" onclick="filterPillars('ignite'); toggleMobileMenu()" class="block py-2 text-crispWhite hover:text-cyanPulse border-b border-gridBorder/50">03 // Ignite Alliance</a>
+            <a href="#pillars" onclick="filterPillars('ca'); toggleMobileMenu()" class="block py-2 text-crispWhite hover:text-cyanPulse border-b border-gridBorder/50">04 // CA Program</a>
+            <a href="#schedule-explorer" onclick="toggleMobileMenu()" class="block py-2 text-crispWhite hover:text-cyanPulse border-b border-gridBorder/50">05 // Track Explorer</a>
+            <a href="#accommodation" onclick="toggleMobileMenu()" class="block py-2 text-crispWhite hover:text-cyanPulse">06 // Campus & Accommodation</a>
+        </div>
+    </header>
+
+    <!-- =====================================================================
+         2. HERO SECTION (KINETIC TYPOGRAPHY + 2D TELEMETRY MATRIX CANVAS)
+    ====================================================================== -->
+    <section class="relative min-h-[90vh] flex flex-col justify-between border-b border-gridBorder overflow-hidden">
+        <!-- Interactive 2D HTML5 Telemetry Canvas (Strictly 2D, Zero 3D) -->
+        <canvas id="telemetry-canvas" class="absolute inset-0 w-full h-full z-0"></canvas>
+        
+        <!-- Subtle Radial Vignette for Text Legibility -->
+        <div class="absolute inset-0 bg-gradient-to-b from-obsidian/40 via-obsidian/65 to-obsidian z-0 pointer-events-none"></div>
+
+        <!-- Top Hero Telemetry Bar -->
+        <div class="relative z-10 max-w-[1440px] w-full mx-auto px-4 sm:px-8 pt-8 sm:pt-12 flex flex-wrap items-center justify-between gap-4">
+            <div class="inline-flex items-center gap-3 px-3.5 py-1.5 rounded-sm bg-panel/90 border border-gridBorder backdrop-blur-sm">
+                <span class="w-2 h-2 bg-acidLime rounded-full"></span>
+                <span class="font-mono text-xs tracking-widest uppercase text-crispWhite">POWAI, MUMBAI • DEC 27–29, 2026</span>
+            </div>
+            <div class="font-mono text-xs text-mutedSteel bg-panel/80 px-3.5 py-1.5 border border-gridBorder rounded-sm">
+                CURSOR RADAR: <span id="radar-readout" class="text-cyanPulse">SCANNING VECTOR [000, 000]</span>
+            </div>
+        </div>
+
+        <!-- Center Kinetic Display Typography -->
+        <div class="relative z-10 max-w-[1440px] w-full mx-auto px-4 sm:px-8 my-auto py-12">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-end">
+                <div class="lg:col-span-8">
+                    <p class="font-mono text-xs sm:text-sm uppercase tracking-[0.25em] text-cyanPulse mb-4">
+                        // MILESTONE EDITION • EST. 1998
+                    </p>
+                    <h1 class="font-display font-bold text-5xl sm:text-7xl md:text-8xl xl:text-[104px] leading-[0.92] tracking-tight uppercase">
+                        <span class="block text-crispWhite">TECHFEST</span>
+                        <span class="block text-stroke-white">30.0 — ASIA'S</span>
+                        <span class="block text-crispWhite">LARGEST <span class="text-signalOrange">SCI & TECH</span></span>
+                        <span class="block text-crispWhite">FESTIVAL</span>
+                    </h1>
+                </div>
+
+                <!-- Right Hero Telemetry & Countdown Box -->
+                <div class="lg:col-span-4 bg-panel/90 backdrop-blur-md border border-gridBorder p-6 rounded-sm space-y-6">
+                    <div class="flex items-center justify-between border-b border-gridBorder pb-3">
+                        <span class="font-mono text-xs uppercase tracking-widest text-mutedSteel">T-MINUS LAUNCH</span>
+                        <span class="font-mono text-xs text-cyanPulse px-2 py-0.5 bg-cyanPulse/10 border border-cyanPulse/30 rounded-sm">IITB CAMPUS</span>
+                    </div>
+
+                    <!-- Live Countdown Grid -->
+                    <div class="grid grid-cols-4 gap-2 text-center font-mono">
+                        <div class="bg-obsidian border border-gridBorder p-3 rounded-sm">
+                            <div id="cd-days" class="text-2xl sm:text-3xl font-bold text-crispWhite">38</div>
+                            <div class="text-[10px] text-mutedSteel uppercase mt-1">DAYS</div>
+                        </div>
+                        <div class="bg-obsidian border border-gridBorder p-3 rounded-sm">
+                            <div id="cd-hours" class="text-2xl sm:text-3xl font-bold text-cyanPulse">14</div>
+                            <div class="text-[10px] text-mutedSteel uppercase mt-1">HRS</div>
+                        </div>
+                        <div class="bg-obsidian border border-gridBorder p-3 rounded-sm">
+                            <div id="cd-mins" class="text-2xl sm:text-3xl font-bold text-crispWhite">42</div>
+                            <div class="text-[10px] text-mutedSteel uppercase mt-1">MIN</div>
+                        </div>
+                        <div class="bg-obsidian border border-gridBorder p-3 rounded-sm">
+                            <div id="cd-secs" class="text-2xl sm:text-3xl font-bold text-signalOrange">09</div>
+                            <div class="text-[10px] text-mutedSteel uppercase mt-1">SEC</div>
+                        </div>
+                    </div>
+
+                    <p class="text-sm text-mutedSteel leading-relaxed">
+                        Three decades of engineering audacity. Join 175,000+ innovators, autonomous robotics engineers, quant researchers, and global keynote speakers at IIT Bombay.
+                    </p>
+
+                    <!-- Quick Action CTAs -->
+                    <div class="flex flex-col sm:flex-row gap-3 pt-1">
+                        <a href="#pillars" onclick="filterPillars('competitions')" class="interactive-target flex-1 text-center px-5 py-3.5 bg-cyanPulse hover:bg-crispWhite text-obsidian font-mono font-bold text-xs uppercase tracking-wider rounded-sm transition-colors">
+                            Explore Competitions
+                        </a>
+                        <a href="#pillars" onclick="filterPillars('ca')" class="interactive-target flex-1 text-center px-5 py-3.5 bg-transparent hover:bg-panelHover text-crispWhite border border-gridBorder hover:border-cyanPulse font-mono font-bold text-xs uppercase tracking-wider rounded-sm transition-colors">
+                            CA Program
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bottom Scroll Indicator -->
+        <div class="relative z-10 border-t border-gridBorder bg-obsidian/80 px-4 sm:px-8 py-3 flex items-center justify-between font-mono text-[11px] text-mutedSteel">
+            <span>INTERACT WITH GRID TO PERTURB TELEMETRY NODES</span>
+            <span class="text-crispWhite">SCROLL TO INITIALIZE ↓</span>
+        </div>
+    </section>
+
+    <!-- =====================================================================
+         3. LIVE METRICS TICKER / MARQUEE
+    ====================================================================== -->
+    <div class="border-b border-gridBorder bg-panel overflow-hidden py-4 select-none">
+        <div class="flex whitespace-nowrap animate-marquee">
+            <!-- Marquee Group 1 -->
+            <div class="flex items-center gap-10 px-5 font-display font-bold text-xl sm:text-2xl uppercase tracking-wider">
+                <span class="text-crispWhite">175,000+ FOOTFALL</span>
+                <span class="text-signalOrange font-mono text-base">//</span>
+                <span class="text-cyanPulse">2,500+ COLLEGES</span>
+                <span class="text-signalOrange font-mono text-base">//</span>
+                <span class="text-crispWhite">₹50L+ PRIZE POOL</span>
+                <span class="text-signalOrange font-mono text-base">//</span>
+                <span class="text-acidLime">30TH MILESTONE EDITION</span>
+                <span class="text-signalOrange font-mono text-base">//</span>
+                <span class="text-crispWhite">IIT BOMBAY, MUMBAI</span>
+                <span class="text-signalOrange font-mono text-base">//</span>
+                <span class="text-cyanPulse">40+ COUNTRIES REPRESENTED</span>
+                <span class="text-signalOrange font-mono text-base">//</span>
+            </div>
+            <!-- Marquee Group 2 (Seamless Loop) -->
+            <div class="flex items-center gap-10 px-5 font-display font-bold text-xl sm:text-2xl uppercase tracking-wider">
+                <span class="text-crispWhite">175,000+ FOOTFALL</span>
+                <span class="text-signalOrange font-mono text-base">//</span>
+                <span class="text-cyanPulse">2,500+ COLLEGES</span>
+                <span class="text-signalOrange font-mono text-base">//</span>
+                <span class="text-crispWhite">₹50L+ PRIZE POOL</span>
+                <span class="text-signalOrange font-mono text-base">//</span>
+                <span class="text-acidLime">30TH MILESTONE EDITION</span>
+                <span class="text-signalOrange font-mono text-base">//</span>
+                <span class="text-crispWhite">IIT BOMBAY, MUMBAI</span>
+                <span class="text-signalOrange font-mono text-base">//</span>
+                <span class="text-cyanPulse">40+ COUNTRIES REPRESENTED</span>
+                <span class="text-signalOrange font-mono text-base">//</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- =====================================================================
+         4. CORE PILLARS BENTO GRID (INTERACTIVE FILTERING)
+    ====================================================================== -->
+    <section id="pillars" class="py-20 sm:py-28 border-b border-gridBorder swiss-grid-bg">
+        <div class="max-w-[1440px] mx-auto px-4 sm:px-8">
+            <!-- Section Header + Interactive Pillar Filter Tabs -->
+            <div class="flex flex-col lg:flex-row lg:items-end justify-between gap-6 mb-12">
+                <div>
+                    <span class="font-mono text-xs uppercase tracking-[0.2em] text-signalOrange block mb-2">// ARCHITECTURE OF TECHFEST 30.0</span>
+                    <h2 class="font-display font-bold text-4xl sm:text-6xl uppercase tracking-tight text-crispWhite">
+                        CORE FESTIVAL PILLARS
+                    </h2>
+                </div>
+
+                <!-- Interactive Filter Buttons -->
+                <div class="flex flex-wrap gap-2 bg-panel p-1.5 border border-gridBorder rounded-sm" role="tablist">
+                    <button onclick="filterPillars('all')" data-pillar-btn="all" class="pillar-tab-btn interactive-target px-4 py-2 font-mono text-xs uppercase tracking-wider rounded-sm bg-cyanPulse text-obsidian font-bold transition-all">
+                        ALL MODULES (04)
+                    </button>
+                    <button onclick="filterPillars('competitions')" data-pillar-btn="competitions" class="pillar-tab-btn interactive-target px-4 py-2 font-mono text-xs uppercase tracking-wider rounded-sm text-mutedSteel hover:text-crispWhite transition-all">
+                        COMPETITIONS
+                    </button>
+                    <button onclick="filterPillars('workshops')" data-pillar-btn="workshops" class="pillar-tab-btn interactive-target px-4 py-2 font-mono text-xs uppercase tracking-wider rounded-sm text-mutedSteel hover:text-crispWhite transition-all">
+                        WORKSHOPS
+                    </button>
+                    <button onclick="filterPillars('ignite')" data-pillar-btn="ignite" class="pillar-tab-btn interactive-target px-4 py-2 font-mono text-xs uppercase tracking-wider rounded-sm text-mutedSteel hover:text-crispWhite transition-all">
+                        IGNITE ALLIANCE
+                    </button>
+                    <button onclick="filterPillars('ca')" data-pillar-btn="ca" class="pillar-tab-btn interactive-target px-4 py-2 font-mono text-xs uppercase tracking-wider rounded-sm text-mutedSteel hover:text-crispWhite transition-all">
+                        CA PROGRAM
+                    </button>
+                </div>
+            </div>
+
+            <!-- Bento Grid Layout -->
+            <div id="pillars-bento-grid" class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                
+                <!-- PILLAR 1: COMPETITIONS (Spans 8 cols on desktop) -->
+                <div data-pillar-card="competitions" class="pillar-card lg:col-span-8 bg-panel border border-gridBorder hover:border-cyanPulse/70 transition-all duration-300 rounded-sm p-6 sm:p-8 flex flex-col justify-between">
+                    <div>
+                        <div class="flex flex-wrap items-center justify-between gap-4 border-b border-gridBorder pb-5 mb-6">
+                            <div class="flex items-center gap-3">
+                                <span class="px-2.5 py-1 bg-signalOrange/15 border border-signalOrange text-signalOrange font-mono text-xs font-bold rounded-sm">PILLAR 01</span>
+                                <h3 class="font-display font-bold text-2xl sm:text-3xl uppercase text-crispWhite">FLAGSHIP COMPETITIONS</h3>
+                            </div>
+                            <span class="font-mono text-xs text-cyanPulse">TOTAL POOL: ₹50,00,000+</span>
+                        </div>
+
+                        <p class="text-mutedSteel text-sm sm:text-base mb-6 max-w-2xl">
+                            High-stakes international engineering challenges spanning combat robotics, algorithmic quantitative finance, autonomous drone navigation, and social innovation.
+                        </p>
+
+                        <!-- 4 Flagship Competition Mini-Cards -->
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <!-- Comp 1: Robowars -->
+                            <div class="bg-obsidian border border-gridBorder hover:border-signalOrange p-5 rounded-sm transition-colors group">
+                                <div class="flex items-center justify-between font-mono text-[11px] text-mutedSteel mb-2">
+                                    <span>INTERNATIONAL // HEAVYWEIGHT</span>
+                                    <span class="text-signalOrange font-bold">₹15,00,000</span>
+                                </div>
+                                <h4 class="font-display font-bold text-xl text-crispWhite group-hover:text-signalOrange transition-colors">ROBOWARS</h4>
+                                <p class="text-xs text-mutedSteel mt-1.5 mb-4">15kg & 60kg combat bots clash in Asia's largest bulletproof arena at OAT, IIT Bombay.</p>
+                                <div class="flex items-center justify-between pt-3 border-t border-gridBorder/60">
+                                    <span class="font-mono text-[10px] text-mutedSteel">DEADLINE: DEC 05</span>
+                                    <button onclick="openCompetitionDetail('robowars')" class="interactive-target font-mono text-xs text-cyanPulse hover:underline uppercase">Quick-View →</button>
+                                </div>
+                            </div>
+
+                            <!-- Comp 2: Perceptron Hackathon with Optiver -->
+                            <div class="bg-obsidian border border-gridBorder hover:border-cyanPulse p-5 rounded-sm transition-colors group">
+                                <div class="flex items-center justify-between font-mono text-[11px] text-mutedSteel mb-2">
+                                    <span>QUANT & AI // OPTIVER</span>
+                                    <span class="text-cyanPulse font-bold">₹8,50,000</span>
+                                </div>
+                                <h4 class="font-display font-bold text-xl text-crispWhite group-hover:text-cyanPulse transition-colors">PERCEPTRON HACKATHON</h4>
+                                <p class="text-xs text-mutedSteel mt-1.5 mb-4">Low-latency market-making & statistical alpha modeling challenge co-hosted with Optiver.</p>
+                                <div class="flex items-center justify-between pt-3 border-t border-gridBorder/60">
+                                    <span class="font-mono text-[10px] text-mutedSteel">DEADLINE: DEC 02</span>
+                                    <button onclick="openCompetitionDetail('perceptron')" class="interactive-target font-mono text-xs text-cyanPulse hover:underline uppercase">Quick-View →</button>
+                                </div>
+                            </div>
+
+                            <!-- Comp 3: Meshmerize -->
+                            <div class="bg-obsidian border border-gridBorder hover:border-cyanPulse p-5 rounded-sm transition-colors group">
+                                <div class="flex items-center justify-between font-mono text-[11px] text-mutedSteel mb-2">
+                                    <span>AUTONOMOUS // MAZE</span>
+                                    <span class="text-cyanPulse font-bold">₹4,00,000</span>
+                                </div>
+                                <h4 class="font-display font-bold text-xl text-crispWhite group-hover:text-cyanPulse transition-colors">MESHMERIZE</h4>
+                                <p class="text-xs text-mutedSteel mt-1.5 mb-4">Build an autonomous line-following & path-optimizing bot capable of solving dynamic grid mazes.</p>
+                                <div class="flex items-center justify-between pt-3 border-t border-gridBorder/60">
+                                    <span class="font-mono text-[10px] text-mutedSteel">ZONALS + FINALE</span>
+                                    <button onclick="openCompetitionDetail('meshmerize')" class="interactive-target font-mono text-xs text-cyanPulse hover:underline uppercase">Quick-View →</button>
+                                </div>
+                            </div>
+
+                            <!-- Comp 4: RoboReach -->
+                            <div class="bg-obsidian border border-gridBorder hover:border-acidLime p-5 rounded-sm transition-colors group">
+                                <div class="flex items-center justify-between font-mono text-[11px] text-mutedSteel mb-2">
+                                    <span>IMPACT ROBOTICS</span>
+                                    <span class="text-acidLime font-bold">₹3,50,000</span>
+                                </div>
+                                <h4 class="font-display font-bold text-xl text-crispWhite group-hover:text-acidLime transition-colors">ROBOREACH</h4>
+                                <p class="text-xs text-mutedSteel mt-1.5 mb-4">Deployable assistive & rural infrastructure robotics prototypes solving real-world Indian challenges.</p>
+                                <div class="flex items-center justify-between pt-3 border-t border-gridBorder/60">
+                                    <span class="font-mono text-[10px] text-mutedSteel">PROTOTYPE TRACK</span>
+                                    <button onclick="openCompetitionDetail('roboreach')" class="interactive-target font-mono text-xs text-cyanPulse hover:underline uppercase">Quick-View →</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- PILLAR 2: WORKSHOPS (Spans 4 cols on desktop) -->
+                <div data-pillar-card="workshops" class="pillar-card lg:col-span-4 bg-panel border border-gridBorder hover:border-cyanPulse/70 transition-all duration-300 rounded-sm p-6 sm:p-8 flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center justify-between border-b border-gridBorder pb-5 mb-6">
+                            <div class="flex items-center gap-3">
+                                <span class="px-2.5 py-1 bg-cyanPulse/15 border border-cyanPulse text-cyanPulse font-mono text-xs font-bold rounded-sm">PILLAR 02</span>
+                                <h3 class="font-display font-bold text-2xl uppercase text-crispWhite">WORKSHOPS</h3>
+                            </div>
+                            <span class="px-2 py-0.5 bg-acidLime text-obsidian font-mono text-[10px] font-bold uppercase rounded-sm">30% FESTIVE OFF</span>
+                        </div>
+
+                        <p class="text-mutedSteel text-sm mb-6">
+                            2-day certified hands-on bootcamps led by industry practitioners & IIT Bombay faculty. Includes official Techfest certification.
+                        </p>
+
+                        <div class="space-y-3">
+                            <div class="p-3.5 bg-obsidian border border-gridBorder rounded-sm flex items-center justify-between">
+                                <div>
+                                    <div class="font-display font-bold text-sm text-crispWhite">Generative AI & LLM Agents</div>
+                                    <div class="font-mono text-[11px] text-mutedSteel">2 Days • Hardware + Cloud Lab</div>
+                                </div>
+                                <button onclick="openRegistrationModal('Workshop: Generative AI & LLM Agents')" class="interactive-target px-3 py-1.5 bg-panel hover:bg-cyanPulse hover:text-obsidian border border-gridBorder font-mono text-[11px] text-cyanPulse rounded-sm transition-colors">
+                                    ENROLL
+                                </button>
+                            </div>
+
+                            <div class="p-3.5 bg-obsidian border border-gridBorder rounded-sm flex items-center justify-between">
+                                <div>
+                                    <div class="font-display font-bold text-sm text-crispWhite">ROS2 & Autonomous Robotics</div>
+                                    <div class="font-mono text-[11px] text-mutedSteel">2 Days • LiDAR & SLAM Stack</div>
+                                </div>
+                                <button onclick="openRegistrationModal('Workshop: ROS2 & Autonomous Robotics')" class="interactive-target px-3 py-1.5 bg-panel hover:bg-cyanPulse hover:text-obsidian border border-gridBorder font-mono text-[11px] text-cyanPulse rounded-sm transition-colors">
+                                    ENROLL
+                                </button>
+                            </div>
+
+                            <div class="p-3.5 bg-obsidian border border-gridBorder rounded-sm flex items-center justify-between">
+                                <div>
+                                    <div class="font-display font-bold text-sm text-crispWhite">Algorithmic Quant Finance</div>
+                                    <div class="font-mono text-[11px] text-mutedSteel">2 Days • Options & HFT Backtesting</div>
+                                </div>
+                                <button onclick="openRegistrationModal('Workshop: Algorithmic Quant Finance')" class="interactive-target px-3 py-1.5 bg-panel hover:bg-cyanPulse hover:text-obsidian border border-gridBorder font-mono text-[11px] text-cyanPulse rounded-sm transition-colors">
+                                    ENROLL
+                                </button>
+                            </div>
+
+                            <div class="p-3.5 bg-obsidian border border-gridBorder rounded-sm flex items-center justify-between">
+                                <div>
+                                    <div class="font-display font-bold text-sm text-crispWhite">Offensive Cybersecurity & Zero-Day</div>
+                                    <div class="font-mono text-[11px] text-mutedSteel">2 Days • Red Teaming & NetSec</div>
+                                </div>
+                                <button onclick="openRegistrationModal('Workshop: Offensive Cybersecurity')" class="interactive-target px-3 py-1.5 bg-panel hover:bg-cyanPulse hover:text-obsidian border border-gridBorder font-mono text-[11px] text-cyanPulse rounded-sm transition-colors">
+                                    ENROLL
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-6 pt-4 border-t border-gridBorder flex items-center justify-between font-mono text-xs">
+                        <span class="text-mutedSteel">GROUP OF 4+ DISCOUNT</span>
+                        <span class="text-acidLime font-bold">CODE: TF30SQUAD</span>
+                    </div>
+                </div>
+
+                <!-- PILLAR 3: IGNITE ALLIANCE (Spans 6 cols on desktop) -->
+                <div data-pillar-card="ignite" class="pillar-card lg:col-span-6 bg-panel border border-gridBorder hover:border-signalOrange/70 transition-all duration-300 rounded-sm p-6 sm:p-8 flex flex-col justify-between">
+                    <div>
+                        <div class="flex flex-wrap items-center justify-between gap-2 border-b border-gridBorder pb-5 mb-6">
+                            <div class="flex items-center gap-3">
+                                <span class="px-2.5 py-1 bg-signalOrange/15 border border-signalOrange text-signalOrange font-mono text-xs font-bold rounded-sm">PILLAR 03</span>
+                                <h3 class="font-display font-bold text-2xl sm:text-3xl uppercase text-crispWhite">IGNITE ALLIANCE</h3>
+                            </div>
+                            <span class="font-mono text-xs text-acidLime">₹1,00,000 SEED GRANT POOL</span>
+                        </div>
+
+                        <p class="text-mutedSteel text-sm mb-6">
+                            Official institutional partnership network for college technical councils, robotics clubs, and IEEE/ACM student chapters across Asia.
+                        </p>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
+                            <div class="bg-obsidian border border-gridBorder p-4 rounded-sm">
+                                <div class="font-mono text-xs text-cyanPulse font-bold mb-1">TRACK A // CATALYST</div>
+                                <div class="font-display font-bold text-lg text-crispWhite mb-2">Emerging Tech Clubs</div>
+                                <ul class="text-xs text-mutedSteel space-y-1.5 font-mono">
+                                    <li>+ Direct Zonal Hosting Rights</li>
+                                    <li>+ ₹40,000 Seed Grant Eligibility</li>
+                                    <li>+ Co-Branded Workshop Kits</li>
+                                </ul>
+                            </div>
+                            <div class="bg-obsidian border border-signalOrange/50 p-4 rounded-sm">
+                                <div class="font-mono text-xs text-signalOrange font-bold mb-1">TRACK B // VANGUARD</div>
+                                <div class="font-display font-bold text-lg text-crispWhite mb-2">Premier Student Councils</div>
+                                <ul class="text-xs text-mutedSteel space-y-1.5 font-mono">
+                                    <li>+ Convocation Hall VIP Access</li>
+                                    <li>+ ₹60,000 Innovation Grant</li>
+                                    <li>+ National Council Summit Pass</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button onclick="openRegistrationModal('Ignite Alliance: Institutional Track')" class="interactive-target w-full py-3.5 bg-obsidian hover:bg-signalOrange text-crispWhite hover:text-obsidian border border-signalOrange font-mono font-bold text-xs uppercase tracking-wider rounded-sm transition-colors">
+                        NOMINATE YOUR COLLEGE TECHNICAL BODY →
+                    </button>
+                </div>
+
+                <!-- PILLAR 4: COLLEGE AMBASSADOR (CA) PROGRAM (Spans 6 cols on desktop) -->
+                <div data-pillar-card="ca" class="pillar-card lg:col-span-6 bg-panel border border-gridBorder hover:border-cyanPulse/70 transition-all duration-300 rounded-sm p-6 sm:p-8 flex flex-col justify-between">
+                    <div>
+                        <div class="flex flex-wrap items-center justify-between gap-2 border-b border-gridBorder pb-5 mb-6">
+                            <div class="flex items-center gap-3">
+                                <span class="px-2.5 py-1 bg-cyanPulse/15 border border-cyanPulse text-cyanPulse font-mono text-xs font-bold rounded-sm">PILLAR 04</span>
+                                <h3 class="font-display font-bold text-2xl sm:text-3xl uppercase text-crispWhite">CA PROGRAM // TIER SIMULATOR</h3>
+                            </div>
+                            <span class="font-mono text-xs text-cyanPulse">12,000+ CAMPUS LEADS</span>
+                        </div>
+
+                        <p class="text-mutedSteel text-sm mb-5">
+                            Lead Techfest 30.0 in your college. Slide the referral counter below to preview real-time leaderboard points, internship unlocks, and IIT Bombay hospitality perks.
+                        </p>
+
+                        <!-- Interactive CA Tier Calculator -->
+                        <div class="bg-obsidian border border-gridBorder p-5 rounded-sm space-y-4">
+                            <div class="flex items-center justify-between font-mono text-xs">
+                                <span class="text-mutedSteel">CAMPUS REFERRALS: <strong id="ca-ref-count" class="text-crispWhite text-base">25</strong></span>
+                                <span class="text-cyanPulse">POINTS: <strong id="ca-points-count" class="text-base">2,500 PTS</strong></span>
+                            </div>
+
+                            <input id="ca-slider" type="range" min="5" max="100" value="25" oninput="updateCATier(this.value)" class="w-full" aria-label="Campus Referrals Slider">
+
+                            <div class="flex items-center justify-between pt-2 border-t border-gridBorder/70">
+                                <div>
+                                    <div class="font-mono text-[10px] uppercase text-mutedSteel">UNLOCKED RANK</div>
+                                    <div id="ca-rank-title" class="font-display font-bold text-xl text-cyanPulse">SILVER OPERATIVE</div>
+                                </div>
+                                <div class="text-right">
+                                    <div class="font-mono text-[10px] uppercase text-mutedSteel">KEY REWARD</div>
+                                    <div id="ca-reward-text" class="font-mono text-xs text-acidLime">Official IITB LOR + Techfest Merch Kit</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button onclick="openRegistrationModal('College Ambassador (CA) Application')" class="interactive-target mt-6 w-full py-3.5 bg-cyanPulse hover:bg-crispWhite text-obsidian font-mono font-bold text-xs uppercase tracking-wider rounded-sm transition-colors">
+                        APPLY AS CAMPUS AMBASSADOR →
+                    </button>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- =====================================================================
+         5. INTERACTIVE EVENT & SCHEDULE TRACK EXPLORER
+    ====================================================================== -->
+    <section id="schedule-explorer" class="py-20 sm:py-28 border-b border-gridBorder bg-obsidian">
+        <div class="max-w-[1440px] mx-auto px-4 sm:px-8">
+            <div class="flex flex-col lg:flex-row lg:items-end justify-between gap-6 mb-10">
+                <div>
+                    <span class="font-mono text-xs uppercase tracking-[0.2em] text-cyanPulse block mb-2">// LIVE TELEMETRY SCHEDULE • DEC 27–29, 2026</span>
+                    <h2 class="font-display font-bold text-4xl sm:text-6xl uppercase tracking-tight text-crispWhite">
+                        EVENT & TRACK EXPLORER
+                    </h2>
+                </div>
+
+                <!-- Track Filter Pills -->
+                <div class="flex flex-wrap gap-2">
+                    <button onclick="filterSchedule('All')" data-track-btn="All" class="track-btn interactive-target px-4 py-2 font-mono text-xs uppercase border border-cyanPulse bg-cyanPulse text-obsidian font-bold rounded-sm transition-all">
+                        ALL TRACKS
+                    </button>
+                    <button onclick="filterSchedule('Robotics')" data-track-btn="Robotics" class="track-btn interactive-target px-4 py-2 font-mono text-xs uppercase border border-gridBorder bg-panel text-mutedSteel hover:text-crispWhite rounded-sm transition-all">
+                        ROBOTICS
+                    </button>
+                    <button onclick="filterSchedule('AI & Quant')" data-track-btn="AI & Quant" class="track-btn interactive-target px-4 py-2 font-mono text-xs uppercase border border-gridBorder bg-panel text-mutedSteel hover:text-crispWhite rounded-sm transition-all">
+                        AI & QUANT
+                    </button>
+                    <button onclick="filterSchedule('Core Engineering')" data-track-btn="Core Engineering" class="track-btn interactive-target px-4 py-2 font-mono text-xs uppercase border border-gridBorder bg-panel text-mutedSteel hover:text-crispWhite rounded-sm transition-all">
+                        CORE ENGINEERING
+                    </button>
+                    <button onclick="filterSchedule('Exhibitions & Lectures')" data-track-btn="Exhibitions & Lectures" class="track-btn interactive-target px-4 py-2 font-mono text-xs uppercase border border-gridBorder bg-panel text-mutedSteel hover:text-crispWhite rounded-sm transition-all">
+                        EXHIBITIONS & LECTURES
+                    </button>
+                </div>
+            </div>
+
+            <!-- Search & Day Filter Bar -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                <div class="md:col-span-2 relative">
+                    <input type="text" id="event-search-input" onkeyup="renderScheduleList()" placeholder="SEARCH EVENTS BY KEYWORD (E.G., ROBOWARS, OPTIVER, CONVOCATION HALL)..." class="w-full bg-panel border border-gridBorder focus:border-cyanPulse outline-none px-4 py-3 font-mono text-xs text-crispWhite placeholder-mutedSteel rounded-sm">
+                </div>
+                <select id="day-filter-select" onchange="renderScheduleList()" class="bg-panel border border-gridBorder focus:border-cyanPulse outline-none px-4 py-3 font-mono text-xs text-crispWhite rounded-sm">
+                    <option value="ALL">ALL FESTIVAL DAYS (DEC 27–29)</option>
+                    <option value="DAY 01">DAY 01 // DEC 27, 2026</option>
+                    <option value="DAY 02">DAY 02 // DEC 28, 2026</option>
+                    <option value="DAY 03">DAY 03 // DEC 29, 2026</option>
+                </select>
+            </div>
+
+            <!-- Interactive Schedule Matrix Table -->
+            <div class="border border-gridBorder rounded-sm overflow-hidden bg-panel">
+                <div class="hidden md:grid md:grid-cols-12 gap-4 px-6 py-3.5 bg-obsidian border-b border-gridBorder font-mono text-[11px] uppercase tracking-wider text-mutedSteel">
+                    <div class="col-span-2">DAY // TIME</div>
+                    <div class="col-span-4">EVENT / SESSION TITLE</div>
+                    <div class="col-span-2">DOMAIN TRACK</div>
+                    <div class="col-span-2">IITB VENUE</div>
+                    <div class="col-span-2 text-right">ACTION</div>
+                </div>
+                <div id="schedule-rows-container" class="divide-y divide-gridBorder">
+                    <!-- Populated dynamically via JS -->
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- =====================================================================
+         6. ACCOMMODATION & CAMPUS LOGISTICS STRIP + FOOTER
+    ====================================================================== -->
+    <section id="accommodation" class="py-16 sm:py-24 bg-panel border-b border-gridBorder">
+        <div class="max-w-[1440px] mx-auto px-4 sm:px-8">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+                <div class="lg:col-span-7 space-y-4">
+                    <span class="font-mono text-xs uppercase tracking-widest text-acidLime">// ON-CAMPUS HOSPITALITY & LOGISTICS</span>
+                    <h2 class="font-display font-bold text-3xl sm:text-5xl uppercase text-crispWhite">
+                        STAY INSIDE IIT BOMBAY POWAI CAMPUS
+                    </h2>
+                    <p class="text-mutedSteel text-sm sm:text-base max-w-2xl leading-relaxed">
+                        Outstation contingents and workshop participants can book verified IIT Bombay hostel accommodation (Dec 26–30, 2026). Includes 24/7 campus shuttle access, security clearance, and complimentary entry to EDM Night & International Exhibitions.
+                    </p>
+                    <div class="grid grid-cols-2 sm:grid-cols-3 gap-4 pt-2 font-mono text-xs">
+                        <div class="p-3 bg-obsidian border border-gridBorder rounded-sm">
+                            <span class="text-mutedSteel block text-[10px]">GATE ENTRY</span>
+                            <span class="text-crispWhite font-bold">MAIN GATE (POWAI)</span>
+                        </div>
+                        <div class="p-3 bg-obsidian border border-gridBorder rounded-sm">
+                            <span class="text-mutedSteel block text-[10px]">NEAREST AIRPORT</span>
+                            <span class="text-crispWhite font-bold">BOM T2 (8.5 KM)</span>
+                        </div>
+                        <div class="p-3 bg-obsidian border border-gridBorder rounded-sm col-span-2 sm:col-span-1">
+                            <span class="text-mutedSteel block text-[10px]">CONTINGENT DESK</span>
+                            <span class="text-cyanPulse font-bold">SAC / HOSTEL 12-16</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="lg:col-span-5 bg-obsidian border border-gridBorder p-6 sm:p-8 rounded-sm space-y-5">
+                    <div class="flex items-center justify-between">
+                        <span class="font-display font-bold text-xl uppercase text-crispWhite">HOSPITALITY PORTAL</span>
+                        <span class="px-2.5 py-1 bg-cyanPulse/10 text-cyanPulse font-mono text-xs rounded-sm">LIMITED SLOTS</span>
+                    </div>
+                    <p class="text-xs text-mutedSteel font-mono leading-relaxed">
+                        Generate your Techfest Team ID first to unlock contingent accommodation booking and early-bird meal passes.
+                    </p>
+                    <div class="flex flex-col sm:flex-row gap-3">
+                        <button onclick="openRegistrationModal('Campus Accommodation & Hospitality')" class="interactive-target flex-1 py-3.5 px-4 bg-crispWhite hover:bg-cyanPulse text-obsidian font-mono font-bold text-xs uppercase tracking-wider rounded-sm transition-colors">
+                            BOOK ACCOMMODATION
+                        </button>
+                        <button onclick="copyCampusCoords()" class="interactive-target py-3.5 px-4 bg-panel hover:bg-panelHover border border-gridBorder text-crispWhite font-mono text-xs uppercase rounded-sm transition-colors">
+                            COPY GPS PIN
+                        </button>
+                    </div>
+                    <div id="copy-feedback" class="hidden font-mono text-xs text-acidLime">
+                        ✓ IIT Bombay Main Gate Coordinates copied to clipboard!
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-obsidian py-12 px-4 sm:px-8 font-mono text-xs text-mutedSteel">
+        <div class="max-w-[1440px] mx-auto flex flex-col md:flex-row items-start md:items-center justify-between gap-8 pb-8 border-b border-gridBorder">
+            <div>
+                <div class="font-display font-bold text-2xl text-crispWhite tracking-tight">
+                    TECHFEST <span class="text-cyanPulse">30.0</span> // IIT BOMBAY
+                </div>
+                <p class="mt-2 text-mutedSteel max-w-md">
+                    Students' Activity Centre (SAC), Indian Institute of Technology Bombay, Powai, Mumbai — 400076, Maharashtra, India.
+                </p>
+            </div>
+
+            <div class="flex flex-wrap gap-6 uppercase tracking-wider">
+                <a href="mailto:info@techfest.org" class="hover:text-cyanPulse transition-colors">INFO@TECHFEST.ORG</a>
+                <a href="#pillars" class="hover:text-cyanPulse transition-colors">COMPETITIONS</a>
+                <a href="#schedule-explorer" class="hover:text-cyanPulse transition-colors">SCHEDULE</a>
+                <a href="https://techfest.org" target="_blank" rel="noopener noreferrer" class="text-signalOrange hover:underline">TECHFEST.ORG ↗</a>
+            </div>
+        </div>
+
+        <div class="max-w-[1440px] mx-auto pt-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-[11px]">
+            <span>© 2026 TECHFEST, IIT BOMBAY. ALL RIGHTS RESERVED. 30TH EDITION ARCHIVE.</span>
+            <div class="flex items-center gap-5">
+                <a href="#pillars" onclick="openRegistrationModal('Media & Press Accreditation')" class="hover:text-crispWhite">MEDIA & PRESS</a>
+                <a href="#pillars" onclick="openRegistrationModal('Corporate Sponsorship Inquiry')" class="hover:text-crispWhite">SPONSORSHIP</a>
+                <span class="text-cyanPulse">BUILD: TF30-SWISS-2D</span>
+            </div>
+        </div>
+    </footer>
+
+    <!-- =====================================================================
+         INTERACTIVE MODALS (1. TEAM ID REGISTRATION GENERATOR, 2. EVENT QUICK-VIEW)
+    ====================================================================== -->
+    
+    <!-- Modal 1: Registration & Mock Techfest Team ID Generator -->
+    <div id="registration-modal" class="fixed inset-0 z-50 hidden items-center justify-center bg-obsidian/85 backdrop-blur-md p-4">
+        <div class="bg-panel border border-cyanPulse/60 w-full max-w-lg rounded-sm overflow-hidden shadow-[0_0_50px_rgba(0,240,255,0.15)]">
+            <div class="flex items-center justify-between px-6 py-4 bg-obsidian border-b border-gridBorder">
+                <div class="flex items-center gap-2">
+                    <span class="w-2 h-2 bg-cyanPulse rounded-full"></span>
+                    <span class="font-mono text-xs uppercase tracking-widest text-crispWhite">TECHFEST 30.0 // ID GENERATOR</span>
+                </div>
+                <button onclick="closeRegistrationModal()" class="text-mutedSteel hover:text-signalOrange font-mono text-sm px-2 py-1">[ESC / X]</button>
+            </div>
+
+            <div class="p-6 sm:p-8">
+                <!-- Registration Form State -->
+                <form id="tf-reg-form" onsubmit="handleRegistrationSubmit(event)" class="space-y-4">
+                    <div>
+                        <label class="block font-mono text-[11px] uppercase text-mutedSteel mb-1.5">SELECTED MODULE / TRACK</label>
+                        <input type="text" id="reg-track-input" readonly class="w-full bg-obsidian border border-gridBorder px-3.5 py-2.5 font-mono text-xs text-cyanPulse rounded-sm">
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block font-mono text-[11px] uppercase text-mutedSteel mb-1.5">FULL NAME *</label>
+                            <input type="text" id="reg-name" required placeholder="Aarav Sharma" class="w-full bg-obsidian border border-gridBorder focus:border-cyanPulse outline-none px-3.5 py-2.5 text-sm text-crispWhite rounded-sm">
+                        </div>
+                        <div>
+                            <label class="block font-mono text-[11px] uppercase text-mutedSteel mb-1.5">INSTITUTE / COLLEGE *</label>
+                            <input type="text" id="reg-college" required placeholder="IIT Bombay / VJTI / BITS" class="w-full bg-obsidian border border-gridBorder focus:border-cyanPulse outline-none px-3.5 py-2.5 text-sm text-crispWhite rounded-sm">
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block font-mono text-[11px] uppercase text-mutedSteel mb-1.5">EMAIL ADDRESS *</label>
+                            <input type="email" id="reg-email" required placeholder="aarav@institute.edu.in" class="w-full bg-obsidian border border-gridBorder focus:border-cyanPulse outline-none px-3.5 py-2.5 text-sm text-crispWhite rounded-sm">
+                        </div>
+                        <div>
+                            <label class="block font-mono text-[11px] uppercase text-mutedSteel mb-1.5">TEAM SIZE</label>
+                            <select id="reg-team-size" class="w-full bg-obsidian border border-gridBorder focus:border-cyanPulse outline-none px-3.5 py-2.5 font-mono text-xs text-crispWhite rounded-sm">
+                                <option value="1">SOLO (1 MEMBER)</option>
+                                <option value="2">DUO (2 MEMBERS)</option>
+                                <option value="4" selected>SQUAD (4 MEMBERS)</option>
+                                <option value="6">CONTINGENT (6+ MEMBERS)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="w-full mt-2 py-3.5 bg-signalOrange hover:bg-crispWhite text-obsidian font-mono font-bold text-xs uppercase tracking-widest rounded-sm transition-colors">
+                        GENERATE OFFICIAL TF26 TEAM ID →
+                    </button>
+                </form>
+
+                <!-- Generated ID Pass View (Hidden until submitted) -->
+                <div id="tf-id-success" class="hidden space-y-5">
+                    <div class="p-5 bg-obsidian border-2 border-cyanPulse rounded-sm relative overflow-hidden">
+                        <div class="flex items-center justify-between font-mono text-[10px] text-mutedSteel mb-3">
+                            <span>IIT BOMBAY • DEC 27–29, 2026</span>
+                            <span class="text-acidLime font-bold">VERIFIED PASS</span>
+                        </div>
+                        <div class="font-mono text-xs text-mutedSteel">OFFICIAL TECHFEST TEAM ID</div>
+                        <div id="generated-tf-code" class="font-display font-bold text-4xl sm:text-5xl text-cyanPulse tracking-wider my-1">
+                            TF26-8492
+                        </div>
+                        <div class="mt-4 pt-3 border-t border-gridBorder grid grid-cols-2 gap-2 font-mono text-xs">
+                            <div>
+                                <span class="text-mutedSteel block text-[10px]">PARTICIPANT</span>
+                                <span id="pass-holder-name" class="text-crispWhite font-bold">AARAV SHARMA</span>
+                            </div>
+                            <div>
+                                <span class="text-mutedSteel block text-[10px]">REGISTERED TRACK</span>
+                                <span id="pass-holder-track" class="text-signalOrange font-bold truncate block">ROBOWARS</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flex gap-3">
+                        <button onclick="copyGeneratedID()" class="flex-1 py-3 bg-cyanPulse text-obsidian font-mono font-bold text-xs uppercase rounded-sm">
+                            COPY TEAM ID
+                        </button>
+                        <button onclick="resetRegistrationForm()" class="px-4 py-3 bg-obsidian border border-gridBorder text-crispWhite font-mono text-xs uppercase rounded-sm">
+                            NEW ID
+                        </button>
+                    </div>
+                    <p id="id-copy-msg" class="hidden text-center font-mono text-xs text-acidLime">✓ Team ID copied to clipboard!</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal 2: Competition Quick-View Specs Modal -->
+    <div id="comp-detail-modal" class="fixed inset-0 z-50 hidden items-center justify-center bg-obsidian/85 backdrop-blur-md p-4">
+        <div class="bg-panel border border-gridBorder w-full max-w-xl rounded-sm overflow-hidden">
+            <div class="flex items-center justify-between px-6 py-4 bg-obsidian border-b border-gridBorder">
+                <span id="comp-modal-tag" class="font-mono text-xs text-signalOrange uppercase tracking-widest">COMPETITION BRIEF</span>
+                <button onclick="closeCompDetailModal()" class="text-mutedSteel hover:text-crispWhite font-mono text-sm">[CLOSE X]</button>
+            </div>
+            <div class="p-6 sm:p-8 space-y-5">
+                <div class="flex flex-wrap items-baseline justify-between gap-2">
+                    <h3 id="comp-modal-title" class="font-display font-bold text-3xl text-crispWhite uppercase">ROBOWARS</h3>
+                    <span id="comp-modal-prize" class="font-mono text-lg font-bold text-cyanPulse">₹15,00,000</span>
+                </div>
+                <p id="comp-modal-desc" class="text-sm text-mutedSteel leading-relaxed"></p>
+                
+                <div class="grid grid-cols-2 gap-3 bg-obsidian p-4 border border-gridBorder rounded-sm font-mono text-xs">
+                    <div>
+                        <span class="text-mutedSteel block text-[10px]">MAX TEAM SIZE</span>
+                        <span id="comp-modal-team" class="text-crispWhite font-bold">6 MEMBERS</span>
+                    </div>
+                    <div>
+                        <span class="text-mutedSteel block text-[10px]">ARENA / VENUE</span>
+                        <span id="comp-modal-venue" class="text-crispWhite font-bold">OPEN AIR THEATRE (OAT)</span>
+                    </div>
+                </div>
+
+                <div class="flex gap-3 pt-2">
+                    <button id="comp-modal-register-btn" class="flex-1 py-3.5 bg-signalOrange hover:bg-crispWhite text-obsidian font-mono font-bold text-xs uppercase tracking-wider rounded-sm transition-colors">
+                        REGISTER TEAM FOR THIS EVENT →
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- =====================================================================
+         JAVASCRIPT: 2D TELEMETRY CANVAS, FILTERING, LIVE COUNTDOWN & ID GEN
+    ====================================================================== -->
+    <script>
+        // -------------------------------------------------------------------
+        // 1. 2D KINETIC TELEMETRY MATRIX CANVAS (ZERO 3D, PURE 2D VECTOR GRID)
+        // -------------------------------------------------------------------
+        const canvas = document.getElementById('telemetry-canvas');
+        const ctx = canvas.getContext('2d');
+        const radarReadout = document.getElementById('radar-readout');
+        const telemetryCoords = document.getElementById('telemetry-coords');
+
+        let width, height;
+        let mouse = { x: -1000, y: -1000, active: false };
+        let pulseWave = 0;
+
+        function resizeCanvas() {
+            const rect = canvas.parentElement.getBoundingClientRect();
+            width = canvas.width = rect.width;
+            height = canvas.height = rect.height;
+        }
+
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        // Track Mouse & Touch over Hero
+        window.addEventListener('mousemove', (e) => {
+            const rect = canvas.getBoundingClientRect();
+            mouse.x = e.clientX - rect.left;
+            mouse.y = e.clientY - rect.top;
+            mouse.active = true;
+
+            // Update HUD Radar Coordinates
+            const padX = String(Math.max(0, Math.round(e.clientX))).padStart(4, '0');
+            const padY = String(Math.max(0, Math.round(e.clientY))).padStart(4, '0');
+            if (radarReadout) {
+                radarReadout.textContent = `SCANNING VECTOR [${padX}, ${padY}]`;
+            }
+
+            // Update custom cursor position
+            const cursor = document.getElementById('custom-cursor');
+            if (cursor) {
+                cursor.style.left = `${e.clientX}px`;
+                cursor.style.top = `${e.clientY}px`;
+            }
+        });
+
+        window.addEventListener('touchmove', (e) => {
+            if (e.touches.length > 0) {
+                const rect = canvas.getBoundingClientRect();
+                mouse.x = e.touches[0].clientX - rect.left;
+                mouse.y = e.touches[0].clientY - rect.top;
+                mouse.active = true;
+            }
+        }, { passive: true });
+
+        // Interactive cursor hover states
+        document.querySelectorAll('.interactive-target, button, a, input, select').forEach(el => {
+            el.addEventListener('mouseenter', () => {
+                const cursor = document.getElementById('custom-cursor');
+                if (cursor) cursor.classList.add('cursor-active');
+            });
+            el.addEventListener('mouseleave', () => {
+                const cursor = document.getElementById('custom-cursor');
+                if (cursor) cursor.classList.remove('cursor-active');
+            });
+        });
+
+        // 2D Telemetry Grid Animation Loop
+        function drawTelemetryGrid() {
+            ctx.clearRect(0, 0, width, height);
+            pulseWave += 0.025;
+
+            const spacing = 46;
+            const cols = Math.ceil(width / spacing) + 1;
+            const rows = Math.ceil(height / spacing) + 1;
+            const influenceRadius = 210;
+
+            for (let i = 0; i < cols; i++) {
+                for (let j = 0; j < rows; j++) {
+                    const baseX = i * spacing;
+                    const baseY = j * spacing;
+
+                    const dx = mouse.x - baseX;
+                    const dy = mouse.y - baseY;
+                    const dist = Math.sqrt(dx * dx + dy * dy);
+
+                    let drawX = baseX;
+                    let drawY = baseY;
+                    let alpha = 0.22;
+                    let size = 1.5;
+                    let isHighlighted = false;
+
+                    if (dist < influenceRadius) {
+                        const force = (1 - dist / influenceRadius);
+                        // Repel/Warp nodes slightly around cursor reticle
+                        drawX -= (dx / (dist || 1)) * force * 14;
+                        drawY -= (dy / (dist || 1)) * force * 14;
+                        alpha = 0.25 + force * 0.75;
+                        size = 1.5 + force * 2.5;
+                        isHighlighted = true;
+                    }
+
+                    // Draw Crosshair Node
+                    ctx.strokeStyle = isHighlighted 
+                        ? `rgba(0, 240, 255, ${alpha})` 
+                        : `rgba(138, 143, 152, ${alpha})`;
+                    ctx.lineWidth = isHighlighted ? 1.4 : 1;
+
+                    ctx.beginPath();
+                    ctx.moveTo(drawX - size * 2, drawY);
+                    ctx.lineTo(drawX + size * 2, drawY);
+                    ctx.moveTo(drawX, drawY - size * 2);
+                    ctx.lineTo(drawX, drawY + size * 2);
+                    ctx.stroke();
+
+                    // Connect nearby nodes to cursor with crisp 2D telemetry vectors
+                    if (dist < 135) {
+                        ctx.beginPath();
+                        ctx.moveTo(drawX, drawY);
+                        ctx.lineTo(mouse.x, mouse.y);
+                        ctx.strokeStyle = `rgba(0, 240, 255, ${(1 - dist / 135) * 0.35})`;
+                        ctx.lineWidth = 0.8;
+                        ctx.stroke();
+                    }
+                }
+            }
+
+            // Draw 2D Concentric Radar Reticle at Mouse Position
+            if (mouse.active && mouse.x > 0 && mouse.y > 0) {
+                const ringRadius = 42 + Math.sin(pulseWave * 2) * 6;
+                ctx.beginPath();
+                ctx.arc(mouse.x, mouse.y, ringRadius, 0, Math.PI * 2);
+                ctx.strokeStyle = 'rgba(255, 59, 0, 0.45)';
+                ctx.lineWidth = 1;
+                ctx.setLineDash([4, 6]);
+                ctx.stroke();
+                ctx.setLineDash([]);
+            }
+
+            requestAnimationFrame(drawTelemetryGrid);
+        }
+
+        // Start 2D Canvas loop on load
+        window.onload = function() {
+            drawTelemetryGrid();
+            renderScheduleList();
+            startCountdown();
+        };
+
+        // -------------------------------------------------------------------
+        // 2. LIVE COUNTDOWN TIMER TO TECHFEST 30.0 (DEC 27, 2026)
+        // -------------------------------------------------------------------
+        function startCountdown() {
+            const targetDate = new Date('December 27, 2026 09:00:00 GMT+0530').getTime();
+
+            function updateTimer() {
+                const now = new Date().getTime();
+                const diff = Math.max(0, targetDate - now);
+
+                const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const mins = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+                const secs = Math.floor((diff % (1000 * 60)) / 1000);
+
+                document.getElementById('cd-days').textContent = String(days).padStart(2, '0');
+                document.getElementById('cd-hours').textContent = String(hours).padStart(2, '0');
+                document.getElementById('cd-mins').textContent = String(mins).padStart(2, '0');
+                document.getElementById('cd-secs').textContent = String(secs).padStart(2, '0');
+            }
+
+            updateTimer();
+            setInterval(updateTimer, 1000);
+        }
+
+        // -------------------------------------------------------------------
+        // 3. CORE PILLARS BENTO FILTERING
+        // -------------------------------------------------------------------
+        function filterPillars(selectedPillar) {
+            // Update Tab Button Styles
+            document.querySelectorAll('.pillar-tab-btn').forEach(btn => {
+                const isMatch = btn.getAttribute('data-pillar-btn') === selectedPillar;
+                if (isMatch) {
+                    btn.classList.add('bg-cyanPulse', 'text-obsidian', 'font-bold');
+                    btn.classList.remove('text-mutedSteel');
+                } else {
+                    btn.classList.remove('bg-cyanPulse', 'text-obsidian', 'font-bold');
+                    btn.classList.add('text-mutedSteel');
+                }
+            });
+
+            // Show/Hide & Resize Bento Cards
+            document.querySelectorAll('.pillar-card').forEach(card => {
+                const cardType = card.getAttribute('data-pillar-card');
+                if (selectedPillar === 'all') {
+                    card.classList.remove('hidden');
+                    // Restore original Bento spans
+                    if (cardType === 'competitions') card.className = 'pillar-card lg:col-span-8 bg-panel border border-gridBorder hover:border-cyanPulse/70 transition-all duration-300 rounded-sm p-6 sm:p-8 flex flex-col justify-between';
+                    if (cardType === 'workshops') card.className = 'pillar-card lg:col-span-4 bg-panel border border-gridBorder hover:border-cyanPulse/70 transition-all duration-300 rounded-sm p-6 sm:p-8 flex flex-col justify-between';
+                    if (cardType === 'ignite') card.className = 'pillar-card lg:col-span-6 bg-panel border border-gridBorder hover:border-signalOrange/70 transition-all duration-300 rounded-sm p-6 sm:p-8 flex flex-col justify-between';
+                    if (cardType === 'ca') card.className = 'pillar-card lg:col-span-6 bg-panel border border-gridBorder hover:border-cyanPulse/70 transition-all duration-300 rounded-sm p-6 sm:p-8 flex flex-col justify-between';
+                } else if (cardType === selectedPillar) {
+                    card.classList.remove('hidden');
+                    card.className = 'pillar-card lg:col-span-12 bg-panel border border-cyanPulse transition-all duration-300 rounded-sm p-6 sm:p-8 flex flex-col justify-between';
+                } else {
+                    card.classList.add('hidden');
+                }
+            });
+        }
+
+        // -------------------------------------------------------------------
+        // 4. INTERACTIVE CA TIER SIMULATOR
+        // -------------------------------------------------------------------
+        function updateCATier(referrals) {
+            const count = parseInt(referrals, 10);
+            const points = count * 100;
+            document.getElementById('ca-ref-count').textContent = count;
+            document.getElementById('ca-points-count').textContent = `${points.toLocaleString()} PTS`;
+
+            const rankEl = document.getElementById('ca-rank-title');
+            const rewardEl = document.getElementById('ca-reward-text');
+
+            if (count < 20) {
+                rankEl.textContent = 'BRONZE INITIATE';
+                rankEl.className = 'font-display font-bold text-xl text-crispWhite';
+                rewardEl.textContent = 'Official Techfest 30.0 Certificate + Digital Badge';
+            } else if (count < 50) {
+                rankEl.textContent = 'SILVER OPERATIVE';
+                rankEl.className = 'font-display font-bold text-xl text-cyanPulse';
+                rewardEl.textContent = 'Official IITB LOR + Techfest Merch Kit';
+            } else if (count < 80) {
+                rankEl.textContent = 'GOLD COMMANDER';
+                rankEl.className = 'font-display font-bold text-xl text-acidLime';
+                rewardEl.textContent = 'Free IITB Campus Accommodation + VIP Concert Pass';
+            } else {
+                rankEl.textContent = 'PLATINUM FELLOW';
+                rankEl.className = 'font-display font-bold text-xl text-signalOrange';
+                rewardEl.textContent = 'Direct Corporate Internship Interview + Convocation VIP';
+            }
+        }
+
+        // -------------------------------------------------------------------
+        // 5. EVENT & SCHEDULE TRACK EXPLORER DATA & FILTERING
+        // -------------------------------------------------------------------
+        const scheduleEvents = [
+            {
+                day: 'DAY 01',
+                time: '10:00 IST',
+                title: 'ROBOWARS INTERNATIONAL QUALIFIERS (60KG)',
+                track: 'Robotics',
+                venue: 'OPEN AIR THEATRE (OAT)',
+                badge: 'FLAGSHIP'
+            },
+            {
+                day: 'DAY 01',
+                time: '14:00 IST',
+                title: 'PERCEPTRON QUANT HACKATHON KICKOFF (WITH OPTIVER)',
+                track: 'AI & Quant',
+                venue: 'VMCC AUDITORIUM',
+                badge: '₹8.5L POOL'
+            },
+            {
+                day: 'DAY 01',
+                time: '17:30 IST',
+                title: '30TH EDITION INAUGURAL KEYNOTE: FRONTIERS OF AGI & SPACE',
+                track: 'Exhibitions & Lectures',
+                venue: 'CONVOCATION HALL',
+                badge: 'KEYNOTE'
+            },
+            {
+                day: 'DAY 02',
+                time: '09:30 IST',
+                title: 'MESHMERIZE AUTONOMOUS MAZE SOLVER FINALE',
+                track: 'Robotics',
+                venue: 'INDOOR BADMINTON COURT',
+                badge: 'FINALE'
+            },
+            {
+                day: 'DAY 02',
+                time: '11:30 IST',
+                title: 'AEROMODELLING & FIXED-WING DRONE GRAND PRIX',
+                track: 'Core Engineering',
+                venue: 'GYMKHANA GROUNDS',
+                badge: 'LIVE FLIGHT'
+            },
+            {
+                day: 'DAY 02',
+                time: '15:00 IST',
+                title: 'INTERNATIONAL TECH EXHIBITION: HUMANOIDS & QUANTUM CHIPS',
+                track: 'Exhibitions & Lectures',
+                venue: 'NEW SAC ARENA',
+                badge: 'OPEN TO ALL'
+            },
+            {
+                day: 'DAY 03',
+                time: '10:30 IST',
+                title: 'ROBOREACH RURAL & ASSISTIVE PROTOTYPE SHOWCASE',
+                track: 'Core Engineering',
+                venue: 'LECTURE HALL COMPLEX (LHC)',
+                badge: 'IMPACT'
+            },
+            {
+                day: 'DAY 03',
+                time: '18:30 IST',
+                title: 'ROBOWARS GRAND FINALE & TECHNOHOLIX LASER SHOW',
+                track: 'Robotics',
+                venue: 'OPEN AIR THEATRE (OAT)',
+                badge: 'CLOSING'
+            }
+        ];
+
+        let currentTrackFilter = 'All';
+
+        function filterSchedule(track) {
+            currentTrackFilter = track;
+            document.querySelectorAll('.track-btn').forEach(btn => {
+                const isSelected = btn.getAttribute('data-track-btn') === track;
+                if (isSelected) {
+                    btn.classList.add('border-cyanPulse', 'bg-cyanPulse', 'text-obsidian', 'font-bold');
+                    btn.classList.remove('border-gridBorder', 'bg-panel', 'text-mutedSteel');
+                } else {
+                    btn.classList.remove('border-cyanPulse', 'bg-cyanPulse', 'text-obsidian', 'font-bold');
+                    btn.classList.add('border-gridBorder', 'bg-panel', 'text-mutedSteel');
+                }
+            });
+            renderScheduleList();
+        }
+
+        function renderScheduleList() {
+            const container = document.getElementById('schedule-rows-container');
+            const searchQuery = document.getElementById('event-search-input').value.toLowerCase().trim();
+            const dayFilter = document.getElementById('day-filter-select').value;
+
+            const filtered = scheduleEvents.filter(item => {
+                const matchesTrack = currentTrackFilter === 'All' || item.track === currentTrackFilter;
+                const matchesDay = dayFilter === 'ALL' || item.day === dayFilter;
+                const matchesSearch = item.title.toLowerCase().includes(searchQuery) ||
+                                      item.venue.toLowerCase().includes(searchQuery) ||
+                                      item.track.toLowerCase().includes(searchQuery);
+                return matchesTrack && matchesDay && matchesSearch;
+            });
+
+            if (filtered.length === 0) {
+                container.innerHTML = `
+                    <div class="p-8 text-center font-mono text-xs text-mutedSteel">
+                        NO TELEMETRY MATCHES FOUND FOR CURRENT FILTER PARAMETERS.
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = filtered.map(ev => `
+                <div class="grid grid-cols-1 md:grid-cols-12 gap-3 md:gap-4 px-6 py-5 hover:bg-panelHover transition-colors items-center">
+                    <div class="md:col-span-2 font-mono text-xs">
+                        <span class="text-cyanPulse font-bold">${ev.day}</span>
+                        <span class="text-mutedSteel block">${ev.time}</span>
+                    </div>
+                    <div class="md:col-span-4">
+                        <div class="flex flex-wrap items-center gap-2">
+                            <span class="font-display font-bold text-base text-crispWhite">${ev.title}</span>
+                            <span class="px-2 py-0.5 bg-obsidian border border-gridBorder font-mono text-[10px] text-acidLime rounded-sm">${ev.badge}</span>
+                        </div>
+                    </div>
+                    <div class="md:col-span-2 font-mono text-xs text-mutedSteel">
+                        ${ev.track}
+                    </div>
+                    <div class="md:col-span-2 font-mono text-xs text-crispWhite">
+                        ${ev.venue}
+                    </div>
+                    <div class="md:col-span-2 md:text-right">
+                        <button onclick="openRegistrationModal('${ev.title.replace(/'/g, "\\'")}')" class="interactive-target w-full md:w-auto px-4 py-2 bg-obsidian hover:bg-cyanPulse text-cyanPulse hover:text-obsidian border border-cyanPulse/60 font-mono font-bold text-[11px] uppercase rounded-sm transition-colors">
+                            REGISTER +
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // -------------------------------------------------------------------
+        // 6. COMPETITION QUICK-VIEW MODAL LOGIC
+        // -------------------------------------------------------------------
+        const competitionDetails = {
+            robowars: {
+                tag: 'INTERNATIONAL COMBAT ROBOTICS // FLAGSHIP',
+                title: 'ROBOWARS 30.0',
+                prize: '₹15,00,000 PRIZE POOL',
+                desc: 'India’s largest combat robotics championship returns to the Open Air Theatre (OAT) at IIT Bombay. Teams design, fabricate, and pilot 15kg Featherweight and 60kg Middleweight wired/wireless combat machines in a high-impact polycarbonate arena.',
+                team: 'UP TO 6 MEMBERS',
+                venue: 'OPEN AIR THEATRE (OAT), IITB'
+            },
+            perceptron: {
+                tag: 'QUANTITATIVE FINANCE & AI // PRESENTED WITH OPTIVER',
+                title: 'PERCEPTRON HACKATHON',
+                prize: '₹8,50,000 PRIZE POOL',
+                desc: 'Co-engineered with global market maker Optiver. Participants build ultra-low-latency algorithmic trading strategies, order-book predictors, and statistical arbitrage models tested on live simulated exchange feeds.',
+                team: '1 TO 3 MEMBERS',
+                venue: 'VMCC AUDITORIUM, IITB'
+            },
+            meshmerize: {
+                tag: 'AUTONOMOUS NAVIGATION // ZONALS + FINALE',
+                title: 'MESHMERIZE',
+                prize: '₹4,00,000 PRIZE POOL',
+                desc: 'Design an embedded autonomous robot capable of traversing an unknown grid network, mapping dead-ends in memory during the dry run, and computing the shortest-time path during the final sprint.',
+                team: 'UP TO 4 MEMBERS',
+                venue: 'INDOOR BADMINTON COURT, IITB'
+            },
+            roboreach: {
+                tag: 'SOCIAL & INDUSTRIAL AUTOMATION',
+                title: 'ROBOREACH',
+                prize: '₹3,50,000 PRIZE POOL',
+                desc: 'Focused on deployable engineering for Bharat. Teams present working robotic prototypes addressing precision agriculture, waste sorting, disaster reconnaissance, or affordable medical assistive devices.',
+                team: 'UP TO 5 MEMBERS',
+                venue: 'LECTURE HALL COMPLEX (LHC)'
+            }
+        };
+
+        function openCompetitionDetail(key) {
+            const data = competitionDetails[key];
+            if (!data) return;
+
+            document.getElementById('comp-modal-tag').textContent = data.tag;
+            document.getElementById('comp-modal-title').textContent = data.title;
+            document.getElementById('comp-modal-prize').textContent = data.prize;
+            document.getElementById('comp-modal-desc').textContent = data.desc;
+            document.getElementById('comp-modal-team').textContent = data.team;
+            document.getElementById('comp-modal-venue').textContent = data.venue;
+
+            const regBtn = document.getElementById('comp-modal-register-btn');
+            regBtn.onclick = () => {
+                closeCompDetailModal();
+                openRegistrationModal(`Competition: ${data.title}`);
+            };
+
+            const modal = document.getElementById('comp-detail-modal');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+
+        function closeCompDetailModal() {
+            const modal = document.getElementById('comp-detail-modal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }
+
+        // -------------------------------------------------------------------
+        // 7. MOCK TECHFEST TEAM ID REGISTRATION GENERATOR MODAL
+        // -------------------------------------------------------------------
+        function openRegistrationModal(trackName) {
+            document.getElementById('reg-track-input').value = trackName || 'General Festival Pass';
+            document.getElementById('id-copy-msg').classList.add('hidden');
+            const modal = document.getElementById('registration-modal');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+
+        function closeRegistrationModal() {
+            const modal = document.getElementById('registration-modal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }
+
+        function handleRegistrationSubmit(e) {
+            e.preventDefault();
+            const name = document.getElementById('reg-name').value.trim().toUpperCase();
+            const track = document.getElementById('reg-track-input').value.toUpperCase();
+            
+            // Generate deterministic-looking 4-digit random ID: TF26-XXXX
+            const randomNum = Math.floor(1000 + Math.random() * 9000);
+            const generatedID = `TF26-${randomNum}`;
+
+            document.getElementById('generated-tf-code').textContent = generatedID;
+            document.getElementById('pass-holder-name').textContent = name;
+            document.getElementById('pass-holder-track').textContent = track;
+
+            // Update Top Nav Badge
+            const navBadge = document.getElementById('user-badge-display');
+            const navIdText = document.getElementById('active-tf-id');
+            if (navBadge && navIdText) {
+                navIdText.textContent = generatedID;
+                navBadge.classList.remove('hidden');
+                navBadge.classList.add('flex');
+            }
+
+            // Switch Modal View to Generated Pass
+            document.getElementById('tf-reg-form').classList.add('hidden');
+            document.getElementById('tf-id-success').classList.remove('hidden');
+        }
+
+        function resetRegistrationForm() {
+            document.getElementById('tf-reg-form').reset();
+            document.getElementById('tf-reg-form').classList.remove('hidden');
+            document.getElementById('tf-id-success').classList.add('hidden');
+        }
+
+        function copyGeneratedID() {
+            const code = document.getElementById('generated-tf-code').textContent.trim();
+            copyTextFallback(code);
+            document.getElementById('id-copy-msg').classList.remove('hidden');
+        }
+
+        function copyCampusCoords() {
+            copyTextFallback('19.1334° N, 72.9133° E — IIT Bombay Main Gate, Powai, Mumbai');
+            const msg = document.getElementById('copy-feedback');
+            msg.classList.remove('hidden');
+            setTimeout(() => msg.classList.add('hidden'), 3500);
+        }
+
+        function copyTextFallback(text) {
+            const tempInput = document.createElement('textarea');
+            tempInput.value = text;
+            document.body.appendChild(tempInput);
+            tempInput.select();
+            document.execCommand('copy');
+            document.body.removeChild(tempInput);
+        }
+
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('hidden');
+        }
+
+        // Close modals on Escape key
+        window.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                closeRegistrationModal();
+                closeCompDetailModal();
+            }
+        });
+    </script>
+</body>
+</html>
